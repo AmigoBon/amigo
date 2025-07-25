@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amigobet</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
   <style>
@@ -74,6 +74,18 @@
       font-size: 16px;
       color: #000;
       cursor: pointer;
+      margin-top: 10px;
+    }
+    .google-btn {
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .google-btn img {
+      width: 20px;
     }
     .footer {
       margin-top: 20px;
@@ -82,28 +94,6 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-  <script>
-    function redirectBasedOnCountry(event) {
-      event.preventDefault();
-      const country = document.getElementById('pais').value;
-      if (country === 'Mexico') {
-        window.location.href = 'https://amigobet.mx/?refId=1bd81b';
-      } else {
-        window.location.href = 'https://amigobet.mx/?refId=1bd81b';
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', function () {
-      const countrySelect = document.getElementById('pais');
-      if (countrySelect) {
-        new Choices(countrySelect, {
-          searchEnabled: true,
-          itemSelectText: '',
-          shouldSort: false
-        });
-      }
-    });
-  </script>
 </head>
 <body>
 
@@ -111,10 +101,15 @@
     <h1>Descubre nuestra experiencia exclusiva</h1>
     <p>¡Únete ahora!</p>
 
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+      Entrar con Google
+    </button>
+
     <form onsubmit="redirectBasedOnCountry(event)">
       <div class="form-group">
         <label for="nombre">Tu Nombre</label>
-        <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
+        <input type="text" id="nombre" placeholder="Ingresa tu nombre" required />
       </div>
 
       <div class="form-group">
@@ -142,5 +137,58 @@
     </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTP0CZQGMTT6y_4FShlfblG-AzWyBZHEQ",
+      authDomain: "amigo2-ffe99.firebaseapp.com",
+      projectId: "amigo2-ffe99",
+      storageBucket: "amigo2-ffe99.appspot.com",
+      messagingSenderId: "569440062328",
+      appId: "1:569440062328:web:535b11eeec1cde13db168d",
+      measurementId: "G-QET9YXNBMH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    window.loginWithGoogle = async function () {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        alert(`Bienvenido, ${user.displayName}`);
+        window.location.href = 'https://amigobet.mx/?refId=1bd81b';
+      } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        alert("Error al iniciar sesión. Intenta de nuevo.");
+      }
+    };
+
+    window.redirectBasedOnCountry = function (event) {
+      event.preventDefault();
+      const country = document.getElementById('pais').value;
+      if (country === 'Mexico') {
+        window.location.href = 'https://amigobet.mx/?refId=1bd81b';
+      } else {
+        window.location.href = 'https://amigobet.mx/?refId=1bd81b';
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', function () {
+      const countrySelect = document.getElementById('pais');
+      if (countrySelect) {
+        new Choices(countrySelect, {
+          searchEnabled: true,
+          itemSelectText: '',
+          shouldSort: false
+        });
+      }
+    });
+  </script>
 </body>
 </html>
